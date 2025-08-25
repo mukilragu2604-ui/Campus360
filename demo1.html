@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA Calculator</title>
+    <style>
+        body { font-family: Arial; text-align: center; padding: 20px; background: #f0f2f5; }
+        input, button { padding: 8px; margin: 5px; width: 200px; }
+        button { cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        h2 { color: #333; }
+        .subject-input { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>CGPA Calculator</h2>
+
+    <label>Number of subjects:</label>
+    <input type="number" id="numSubjects" min="1" value="5">
+    <button onclick="generateFields()">Generate Fields</button>
+
+    <div id="inputsContainer"></div>
+    <button id="calculateBtn" onclick="calculateCGPA()" style="display:none;">Calculate CGPA</button>
+    <h3 id="result"></h3>
+
+    <script>
+        function generateFields() {
+            let num = parseInt(document.getElementById("numSubjects").value);
+            let container = document.getElementById("inputsContainer");
+            container.innerHTML = ''; // clear previous fields
+
+            for (let i = 1; i <= num; i++) {
+                container.innerHTML += `
+                    <div class="subject-input">
+                        <input type="number" id="grade${i}" placeholder="Grade for subject ${i}" step="0.1" min="0">
+                        <input type="number" id="credit${i}" placeholder="Credit for subject ${i}" step="0.1" min="0">
+                    </div>
+                `;
+            }
+
+            document.getElementById("calculateBtn").style.display = 'inline-block';
+        }
+
+        function calculateCGPA() {
+            let num = parseInt(document.getElementById("numSubjects").value);
+            let totalPoints = 0;
+            let totalCredits = 0;
+
+            for (let i = 1; i <= num; i++) {
+                let grade = parseFloat(document.getElementById(`grade${i}`).value);
+                let credit = parseFloat(document.getElementById(`credit${i}`).value);
+
+                if (isNaN(grade) || isNaN(credit)) {
+                    alert(`Please enter valid grade and credit for subject ${i}`);
+                    return;
+                }
+
+                totalPoints += grade * credit;
+                totalCredits += credit;
+            }
+
+            let cgpa = totalPoints / totalCredits;
+            document.getElementById("result").innerText = `Your CGPA is: ${cgpa.toFixed(2)}`;
+        }
+
+        // Generate default 5 subjects on page load
+        window.onload = generateFields;
+    </script>
+</body>
+</html>
